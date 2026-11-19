@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}ShopSense · Understand your shopping style{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow"><span class="eyebrow-dot"></span> A little insight into how you shop</span>
+    <h1>Your shopping style,<br><em>understood.</em></h1>
+    <p class="hero-description">
+      Discover whether online, in-store, or a mix of both fits your shopping behavior.
+      Share a few details and let our model make a prediction.
+    </p>
+    <a class="button button-dark" href="{{ url_for('predict') }}">
+      Explore my shopping style <span aria-hidden="true">→</span>
+    </a>
+    <div class="hero-note">
+      <span class="note-icon" aria-hidden="true">✦</span>
+      Takes about 2 minutes · No account needed
+    </div>
+  </div>
+  <div class="hero-visual" aria-label="Illustration of shopping bags">
+    <div class="visual-orbit orbit-one"></div>
+    <div class="visual-orbit orbit-two"></div>
+    <div class="visual-sun"></div>
+    <div class="visual-caption">Know your<br>kind of <strong>shopper.</strong></div>
+    <div class="shopping-bag bag-back">
+      <div class="bag-handle"></div>
+      <span>good<br>things</span>
+    </div>
+    <div class="shopping-bag bag-front">
+      <div class="bag-handle"></div>
+      <span class="bag-star">✳</span>
+    </div>
+    <div class="floating-tag tag-top">curiosity, delivered</div>
+    <div class="floating-tag tag-bottom">your style, your way</div>
+  </div>
+</section>
+
+<section class="overview-section">
+  <div class="section-heading">
+    <span class="eyebrow">The project</span>
+    <h2>More than just a checkout choice.</h2>
+    <p>
+      ShopSense uses shopping habits and preferences to estimate the mode you are
+      most likely to prefer. It is a simple way to explore what drives your choices.
+    </p>
+  </div>
+  <div class="feature-grid">
+    <article class="feature-card">
+      <span class="feature-number">01</span>
+      <h3>Share your habits</h3>
+      <p>Answer a short set of questions about your routines, preferences, and ratings.</p>
+    </article>
+    <article class="feature-card">
+      <span class="feature-number">02</span>
+      <h3>Get a prediction</h3>
+      <p>A trained machine-learning pipeline compares your answers with shopping patterns.</p>
+    </article>
+    <article class="feature-card">
+      <span class="feature-number">03</span>
+      <h3>See the fit</h3>
+      <p>Explore the predicted mode and how the model scores the available choices.</p>
+    </article>
+  </div>
+</section>
+
+<section class="closing-banner">
+  <div>
+    <span class="eyebrow">Ready when you are</span>
+    <h2>Let's find your shopping rhythm.</h2>
+  </div>
+  <a class="button button-light" href="{{ url_for('predict') }}">Start the questionnaire <span aria-hidden="true">→</span></a>
+</section>
+{% endblock %}

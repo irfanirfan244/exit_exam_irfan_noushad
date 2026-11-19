@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Make a prediction · ShopSense{% endblock %}
+
+{% block content %}
+<section class="page-intro">
+  <span class="eyebrow"><span class="eyebrow-dot"></span> Your shopping profile</span>
+  <h1>Tell us a little <em>about you.</em></h1>
+  <p>Answer each question based on what you usually do. Your answers are used to make this prediction.</p>
+</section>
+
+<div class="prediction-layout">
+  <form class="prediction-form" method="post" action="{{ url_for('predict') }}">
+    {% for section in sections %}
+    <section class="form-section">
+      <div class="form-section-heading">
+        <span class="section-index">0{{ loop.index }}</span>
+        <div>
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.description }}</p>
+        </div>
+      </div>
+      <div class="field-grid">
+        {% for field in section.fields %}
+        <div class="field {% if errors.get(field.name) %}field-invalid{% endif %}">
+          <label for="{{ field.name }}">{{ field.label }} <span class="required-mark" aria-hidden="true">*</span></label>
+          {% if field.type == "number" %}
+          <input
+            id="{{ field.name }}"
+            name="{{ field.name }}"
+            type="number"
+            min="{{ field.min }}"
+            max="{{ field.max }}"
+            step="1"
+            value="{{ form_values.get(field.name, '') }}"
+            required
+            aria-describedby="{% if errors.get(field.name) %}error-{{ field.name }}{% else %}hint-{{ field.name }}{% endif %}"
+          >
+          {% if not errors.get(field.name) %}<small id="hint-{{ field.name }}">Ages {{ field.min }}–{{ field.max }}</small>{% endif %}
+          {% elif field.type == "select_number" %}
+          <select id="{{ field.name }}" name="{{ field.name }}" required aria-describedby="{% if errors.get(field.name) %}error-{{ field.name }}{% endif %}">
+            <option value="">Choose a rating</option>
+            {% for option in range(field.min, field.max + 1) %}
+            <option value="{{ option }}" {% if form_values.get(field.name, '')|string == option|string %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+          {% else %}
+          <select id="{{ field.name }}" name="{{ field.name }}" required aria-describedby="{% if errors.get(field.name) %}error-{{ field.name }}{% endif %}">
+            <option value="">Choose an option</option>
+            {% for option in field.options %}
+            <option value="{{ option }}" {% if form_values.get(field.name, '') == option %}selected{% endif %}>{{ option }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+          {% if errors.get(field.name) %}<small class="field-error" id="error-{{ field.name }}">{{ errors.get(field.name) }}</small>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+    <div class="form-actions">
+      <p><span class="required-mark">*</span> All fields are required for an accurate prediction.</p>
+      <button class="button button-dark" type="submit">Predict my shopping mode <span aria-hidden="true">→</span></button>
+    </div>
+  </form>
+
+  <aside class="result-panel {% if prediction %}has-result{% endif %}" aria-live="polite">
+    {% if prediction %}
+    <span class="result-icon" aria-hidden="true">✳</span>
+    <span class="eyebrow">Your prediction</span>
+    <h2>{{ prediction }}</h2>
+    <p class="result-description">
+      Based on the shopping profile you shared, this is the mode the model predicts for you.
+    </p>
+    {% if probabilities %}
+    <div class="confidence-list">
+      <h3>Model scores</h3>
+      {% for item in probabilities %}
+      <div class="confidence-item">
+        <div class="confidence-label"><span>{{ item.label }}</span><span>{{ item.percent }}%</span></div>
+        <div class="confidence-track"><span style="width: {{ item.percent }}%"></span></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <a class="text-link" href="{{ url_for('predict') }}">Try another profile <span aria-hidden="true">↗</span></a>
+    {% else %}
+    <span class="result-icon result-icon-muted" aria-hidden="true">✳</span>
+    <span class="eyebrow">Your result</span>
+    <h2>Make room<br>for a little insight.</h2>
+    <p class="result-description">
+      Complete the questions and your predicted shopping mode will appear here.
+    </p>
+    <div class="result-options">
+      <span>Online</span><span>Offline</span><span>Equal / both</span>
+    </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}
